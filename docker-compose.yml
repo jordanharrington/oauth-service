@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  jivium-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jivium
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - jivium-network
+
+  jivium-auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=jivium-db
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=jivium
+      - DB_PORT=5432
+    depends_on:
+      - jivium-db
+    networks:
+      - jivium-network
+
+networks:
+  jivium-network:
+    driver: bridge
+
+volumes:
+  db-data:
