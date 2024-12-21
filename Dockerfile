@@ -11,10 +11,10 @@ COPY ../../../go.mod ../../../go.sum ./
 RUN go mod download
 
 # Copy the entire project into the container
-COPY ../../../ ./
+COPY .. ./
 
-# Build the Go app (auth-service) specifically
-RUN go build -o auth-service ./cmd/auth-service/cmd/auth-service.go
+# Build the Go app (auth-token) specifically
+RUN go build -o auth-token ./services/auth/cmd/main.go
 
 # Stage 2: Create a minimal runtime image
 FROM alpine:latest
@@ -25,7 +25,7 @@ WORKDIR /root/
 # Copy the compiled binary from the builder stage
 COPY --from=builder /app/auth-service .
 
-# Expose the service's port (adjust according to your app)
+# Expose the token's port
 EXPOSE 8080
 
 # Command to run the executable

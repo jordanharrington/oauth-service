@@ -15,7 +15,7 @@ services:
   jivium-auth-service:
     build:
       context: .
-      dockerfile: cmd/auth-service/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
