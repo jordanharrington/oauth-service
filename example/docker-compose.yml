@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  auth-db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: auth
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+
+  auth-service:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # Database configuration
+      - DB_TYPE=postgres
+      - DB_HOST=auth-db
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=auth
+      - DB_PORT=5432
+      - DB_SSLMODE=disable
+      # Token configuration
+      - TOKEN_EXPIRY=3600        # 1 hour in seconds
+      - REFRESH_EXPIRY=604800    # 7 days in seconds
+      - SERVICE_NAME=test-auth-service
+      # Secrets for JWT
+      - SECRET_KEY_PATH=/run/secrets/secret.key
+      - REFRESH_KEY_PATH=/run/secrets/refresh.key
+      - PUBLIC_KEY_PATH=/run/secrets/public.key
+    depends_on:
+      - auth-db
+    networks:
+      - auth-network
+    volumes:
+      - ./secrets/public.key:/run/secrets/public.key:ro
+      - ./secrets/secret.key:/run/secrets/secret.key:ro
+      - ./secrets/refresh.key:/run/secrets/refresh.key:ro
+
+networks:
+  auth-network:
+    driver: bridge
+
+volumes:
+  db-data:
