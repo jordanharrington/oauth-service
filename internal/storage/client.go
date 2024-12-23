@@ -4,13 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jordanharrington/oauth-service/internal/config"
+	"github.com/jordanharrington/oauth-service/internal/logger"
 	"github.com/jordanharrington/oauth-service/internal/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
-	"log"
 )
 
 type DBClient struct {
@@ -56,7 +56,7 @@ func (d *DBClient) GetUserByUsername(username string) (*model.User, error) {
 	// Query the user from the database
 	if err := d.database.Where("username = ?", username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("user not found")
+			return nil, nil
 		}
 		return nil, fmt.Errorf("error retrieving user: %w", err)
 	}
@@ -68,7 +68,7 @@ func (d *DBClient) GetUserByEmail(email string) (*model.User, error) {
 	var user model.User
 	if err := d.database.Where("email = ?", email).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("user not found")
+			return nil, nil
 		}
 		return nil, fmt.Errorf("error retrieving user: %w", err)
 	}
@@ -80,7 +80,7 @@ func (d *DBClient) GetUserByID(id string) (*model.User, error) {
 	var user model.User
 	if err := d.database.Where("id = ?", id).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("user not found")
+			return nil, nil
 		}
 		return nil, fmt.Errorf("error retrieving user: %w", err)
 	}
@@ -92,7 +92,7 @@ func (d *DBClient) GetRefreshTokenByUserID(id string) (*model.RefreshToken, erro
 	var token model.RefreshToken
 	if err := d.database.Where("userid = ?", id).First(&token).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("token not found")
+			return nil, nil
 		}
 		return nil, fmt.Errorf("error retrieving token: %w", err)
 	}
@@ -104,7 +104,7 @@ func (d *DBClient) GetRefreshToken(refreshToken string) (*model.RefreshToken, er
 	var token model.RefreshToken
 	if err := d.database.Where("token = ?", refreshToken).First(&token).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("token not found")
+			return nil, nil
 		}
 		return nil, fmt.Errorf("error retrieving token: %w", err)
 	}
@@ -115,9 +115,9 @@ func (d *DBClient) GetRefreshToken(refreshToken string) (*model.RefreshToken, er
 func (d *DBClient) DeleteRefreshToken(refreshToken string) error {
 	if err := d.database.Where("token = ?", refreshToken).Delete(&model.RefreshToken{}).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return fmt.Errorf("token not found")
+			return nil
 		}
-		return fmt.Errorf("error retrieving token: %w", err)
+		return fmt.Errorf("error deleting token: %w", err)
 	}
 	return nil
 }
@@ -135,7 +135,7 @@ func (d *DBClient) DeleteUser(userID string) error {
 // CreateUser inserts a new user into the database
 func (d *DBClient) CreateUser(user *model.User) error {
 	if err := d.database.Create(user).Error; err != nil {
-		log.Println("Error creating user:", err)
+		logger.Log().Error().Msgf("Error creating user: %v", err)
 		return err
 	}
 	return nil
@@ -144,7 +144,7 @@ func (d *DBClient) CreateUser(user *model.User) error {
 // CreateToken inserts a new token into the database
 func (d *DBClient) CreateToken(token *model.RefreshToken) error {
 	if err := d.database.Create(token).Error; err != nil {
-		log.Println("Error creating user:", err)
+		logger.Log().Error().Msgf("Error creating token: %v", err)
 		return err
 	}
 	return nil

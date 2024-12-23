@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/jordanharrington/oauth-service/internal/logger"
 	"os"
 	"strconv"
 	"time"
@@ -48,7 +49,7 @@ func LoadConfigDuration(envVar string, fallback time.Duration) time.Duration {
 
 	parsed, err := strconv.Atoi(val)
 	if err != nil {
-		fmt.Printf("Invalid value for %s, using default: %v\n", envVar, fallback)
+		logger.Log().Info().Msgf("Invalid value for %s, using default: %v\n", envVar, fallback)
 		return fallback
 	}
 

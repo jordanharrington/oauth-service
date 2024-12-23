@@ -19,6 +19,8 @@ services:
     ports:
       - "8080:8080"
     environment:
+      # Logging
+      - LOG_LEVEL=debug
       # Database configuration
       - DB_TYPE=postgres
       - DB_HOST=auth-db

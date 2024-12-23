@@ -1,46 +1,57 @@
 package main
 
 import (
-	"fmt"
 	"github.com/jordanharrington/oauth-service/internal/config"
 	"github.com/jordanharrington/oauth-service/internal/handler"
+	"github.com/jordanharrington/oauth-service/internal/logger"
 	"github.com/jordanharrington/oauth-service/internal/service"
 	"github.com/jordanharrington/oauth-service/internal/storage"
-	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+	// setup logging
+	logger.InitGlobalLogger()
+
+	// connect to database
 	storageConfig := config.NewStorageConfig()
 	db, err := storage.NewDBClient(storageConfig)
 	if err != nil {
-		log.Fatalf("Error initializing database: %v", err)
+		logger.Log().Fatal().Msgf("Error initializing database: %v", err)
+		return
 	}
-	fmt.Println("database connection established successfully")
+	logger.Log().Info().Msg("database connection established successfully")
 
+	// Create token service
 	tokenServiceConfig, err := config.NewTokenConfig()
 	if err != nil {
-		log.Fatalf("Error initializing token service: %v", err)
+		logger.Log().Fatal().Msgf("Error initializing token service: %v", err)
+		return
 	}
 	tokenService := service.NewTokenService(tokenServiceConfig)
-	fmt.Println("created token service")
+	logger.Log().Info().Msg("created token service")
 
+	// Find and check public key
 	pKeyPath := os.Getenv("PUBLIC_KEY_PATH")
 	if pKeyPath == "" {
-		log.Fatal("PUBLIC_KEY_PATH environment variable not set")
+		logger.Log().Fatal().Msg("PUBLIC_KEY_PATH environment variable not set")
+		return
 	}
 
 	_, err = os.ReadFile(pKeyPath)
 	if err != nil {
-		log.Fatalf("Error reading public key: %v", err)
+		logger.Log().Fatal().Msgf("Error reading public key: %v", err)
+		return
 	}
-	fmt.Println("found public key")
+	logger.Log().Info().Msg("found public key")
 
+	// Create handler
 	authService := service.NewAuthService(db, tokenService, pKeyPath)
 	h := handler.NewAuthHandler(authService)
-	fmt.Println("initializing service")
+	logger.Log().Info().Msg("initializing service")
 
+	// Setup endpoints
 	http.HandleFunc("/login", h.Login)
 	http.HandleFunc("/logout", h.Logout)
 	http.HandleFunc("/register", h.Register)
@@ -49,6 +60,8 @@ func main() {
 	http.HandleFunc("/validate", h.Validate)
 	http.HandleFunc("/public-key", h.PublicKey)
 
-	fmt.Println("listening on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// Listen
+	logger.Log().Info().Msg("listening on port 8080")
+	err = http.ListenAndServe(":8080", nil)
+	logger.Log().Fatal().Msgf("%v", err)
 }

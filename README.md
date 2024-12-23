@@ -197,23 +197,24 @@ JWT-based authentication and refresh tokens to manage user sessions securely.
 
 The following environment variables are used to configure the OAuth service:
 
-| Variable Name          | Required          | Description                                                                        | Example Value                       |
-|------------------------|-------------------|------------------------------------------------------------------------------------|-------------------------------------|
-| `DB_TYPE`              | Yes               | The type of database being used (e.g., `postgres`, `mysql`, `sqlite`, `sqlserver`) | `postgres`                          |
-| `DB_HOST`              | Yes               | Database host address                                                              | `auth-db`                           |
-| `DB_PORT`              | Yes               | Database port                                                                      | `5432`                              |
-| `DB_USER`              | Yes               | Database username                                                                  | `user`                              |
-| `DB_PASSWORD`          | Yes               | Database password                                                                  | `password`                          |
-| `DB_NAME`              | Yes               | Name of the database                                                               | `auth`                              |
-| `DB_SSLMODE`           | No                | SSL mode for PostgreSQL (e.g., `disable`, `require`)                               | `disable`                           |
-| `ACCESS_TOKEN_EXPIRY`  | No                | Access token expiration duration in seconds                                        | `3600` (default 1 hour)             |
-| `REFRESH_TOKEN_EXPIRY` | No                | Refresh token expiration duration in seconds                                       | `604800` (default 7 days)           |
-| `SERVICE_NAME`         | Yes               | Name of the service (used in token claims)                                         | `oauth-service`                     |
-| `PUBLIC_KEY_PATH`      | Yes               | Path to the public key for JWT validation                                          | `/run/secrets/public.key`           |
-| `PRIVATE_KEY_PATH`     | Required (One of) | Path to the private key for JWT signing                                            | `/run/secrets/private.key`          |
-| `REFRESH_KEY_PATH`     | Required (One of) | Path to the refresh key for refresh token validation                               | `/run/secrets/refresh.key`          |
-| `PRIVATE_KEY`          | Required (One of) | The actual private key value for JWT signing                                       | (Use instead of `PRIVATE_KEY_PATH`) |
-| `REFRESH_KEY`          | Required (One of) | The actual refresh key value for refresh token validation                          | (Use instead of `REFRESH_KEY_PATH`) |
+| Variable Name          | Required          | Description                                                                                                      | Example Value                       |
+|------------------------|-------------------|------------------------------------------------------------------------------------------------------------------|-------------------------------------|
+| `DB_TYPE`              | Yes               | The type of database being used (e.g., `postgres`, `mysql`, `sqlite`, `sqlserver`)                               | `postgres`                          |
+| `DB_HOST`              | Yes               | Database host address                                                                                            | `auth-db`                           |
+| `DB_PORT`              | Yes               | Database port                                                                                                    | `5432`                              |
+| `DB_USER`              | Yes               | Database username                                                                                                | `user`                              |
+| `DB_PASSWORD`          | Yes               | Database password                                                                                                | `password`                          |
+| `DB_NAME`              | Yes               | Name of the database                                                                                             | `auth`                              |
+| `DB_SSLMODE`           | No                | SSL mode for PostgreSQL (e.g., `disable`, `require`)                                                             | `disable`                           |
+| `ACCESS_TOKEN_EXPIRY`  | No                | Access token expiration duration in seconds                                                                      | `3600` (default 1 hour)             |
+| `REFRESH_TOKEN_EXPIRY` | No                | Refresh token expiration duration in seconds                                                                     | `604800` (default 7 days)           |
+| `SERVICE_NAME`         | Yes               | Name of the service (used in token claims)                                                                       | `oauth-service`                     |
+| `PUBLIC_KEY_PATH`      | Yes               | Path to the public key for JWT validation                                                                        | `/run/secrets/public.key`           |
+| `PRIVATE_KEY_PATH`     | Required (One of) | Path to the private key for JWT signing                                                                          | `/run/secrets/private.key`          |
+| `REFRESH_KEY_PATH`     | Required (One of) | Path to the refresh key for refresh token validation                                                             | `/run/secrets/refresh.key`          |
+| `PRIVATE_KEY`          | Required (One of) | The actual private key value for JWT signing                                                                     | (Use instead of `PRIVATE_KEY_PATH`) |
+| `REFRESH_KEY`          | Required (One of) | The actual refresh key value for refresh token validation                                                        | (Use instead of `REFRESH_KEY_PATH`) |
+| `LOG_LEVEL`            | No                | Sets the logging level for the application. Available levels: `trace`, `debug`, `info`, `warn`, `error`, `fatal` | debug     (default `info`)          |
 
 ### Notes on Key Configuration
 
