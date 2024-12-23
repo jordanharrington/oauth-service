@@ -209,7 +209,7 @@ func TestLogin(t *testing.T) {
 			mockError:      nil,
 			method:         http.MethodPost,
 			contentType:    "application/json",
-			body:           `{"username": "validuser"`, // Invalid JSON
+			body:           `{"username": "validuser"`,
 			expectedStatus: http.StatusBadRequest,
 			expectedError:  "Invalid request payload",
 		},
@@ -305,7 +305,7 @@ func TestLogout(t *testing.T) {
 			mockError:      nil,
 			method:         http.MethodPost,
 			contentType:    "application/json",
-			body:           `{"refresh_token":`, // Invalid JSON
+			body:           `{"refresh_token":`,
 			expectedStatus: http.StatusBadRequest,
 			expectedError:  "Invalid request payload",
 		},
@@ -398,7 +398,7 @@ func TestRegister(t *testing.T) {
 			mockError:      nil,
 			method:         http.MethodPost,
 			contentType:    "application/json",
-			body:           `{"username": "testuser"`, // Invalid JSON
+			body:           `{"username": "testuser"`,
 			expectedStatus: http.StatusBadRequest,
 			expectedError:  "Invalid request payload",
 		},
@@ -492,7 +492,7 @@ func TestRefresh(t *testing.T) {
 			mockError:      nil,
 			method:         http.MethodPost,
 			contentType:    "application/json",
-			body:           `{"refresh_token":`, // Invalid JSON
+			body:           `{"refresh_token":`,
 			expectedStatus: http.StatusBadRequest,
 			expectedError:  "Invalid request payload",
 		},
@@ -588,7 +588,7 @@ func TestValidate(t *testing.T) {
 			mockIsValid:    true,
 			method:         http.MethodPost,
 			contentType:    "application/json",
-			body:           `{"token":`, // Invalid JSON
+			body:           `{"token":`,
 			expectedStatus: http.StatusBadRequest,
 			expectedError:  "Invalid request payload",
 		},
@@ -772,7 +772,7 @@ func TestUnregister(t *testing.T) {
 			deleteError:    nil,
 			method:         http.MethodDelete,
 			contentType:    "application/json",
-			body:           `{"username": "testuser"`, // Invalid JSON
+			body:           `{"username": "testuser"`,
 			expectedStatus: http.StatusBadRequest,
 			expectedError:  "Invalid request payload",
 		},
