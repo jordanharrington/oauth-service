@@ -26,9 +26,10 @@ func LoadSecret(envVar string) ([]byte, error) {
 	}
 
 	// Check if the environment variable points to a file path
-	secretPath := os.Getenv(envVar + "_PATH")
+	envVarPath := envVar + "_PATH"
+	secretPath := os.Getenv(envVarPath)
 	if secretPath == "" {
-		return nil, fmt.Errorf("neither %s nor %s_PATH is set", envVar, envVar+"_PATH")
+		return nil, fmt.Errorf("neither %s nor %s is set", envVar, envVarPath)
 	}
 
 	// Read the secret from the file

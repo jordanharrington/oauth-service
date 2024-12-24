@@ -12,14 +12,12 @@ func InitGlobalLogger() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	defaultLogLevel := zerolog.InfoLevel
 	zerolog.SetGlobalLevel(defaultLogLevel)
-	// for other libraries
 	log.Level(defaultLogLevel)
 
 	logLevel := strings.TrimSpace(os.Getenv("LOG_LEVEL"))
 	if logLevel != "" {
 		if parsedLevel, err := zerolog.ParseLevel(logLevel); err == nil {
 			zerolog.SetGlobalLevel(parsedLevel)
-			// for other libraries
 			log.Level(parsedLevel)
 		} else {
 			log.Warn().
